@@ -63,3 +63,20 @@ def parseGenOutputCapability(sites: list) -> list:
 
 # df = parseGenOutputCapability(["EAST WINDSOR-G1", "STEWARTVLE", "PRINCEFARM"])
 # print(df.head())
+
+from xml.etree import ElementTree as ET
+
+def genNames():
+    xml_file_path = 'PUB_GenOutputCapability.xml'
+    tree = ET.parse(xml_file_path)
+    root = tree.getroot()
+
+    # Define the namespace to use for finding elements
+    namespaces = {
+        'imo': 'http://www.theIMO.com/schema'
+    }
+
+    # Extract all generator names
+    generator_names = [elem.text for elem in root.findall('.//imo:GeneratorName', namespaces)]
+    
+    return generator_names

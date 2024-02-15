@@ -1,0 +1,53 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Generator Capacity Charts</title>
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <style>
+        canvas {
+            max-width: 200px; /* Adjust this value to change the size */
+            max-height: 200px; /* Adjust this value to change the size */
+        }
+    </style>
+</head>
+<body>
+    {% for generator in generators %}
+        <h2>{{ generator.name }}</h2>
+        {% if generator.error %}
+            <p>{{ generator.error }}</p>
+        {% else %}
+            <canvas id="chart{{ loop.index }}"></canvas>
+            <script>
+                var ctx = document.getElementById('chart{{ loop.index }}').getContext('2d');
+                var myChart = new Chart(ctx, {
+                    type: 'doughnut',
+                    data: {
+                        labels: ['PowerOut', 'RemainingCapacity'],
+                        datasets: [{
+                            label: '{{ generator.name }}',
+                            data: [{{ generator.data.PowerOut }}, {{ generator.data.RemainingCapacity }}],
+                            backgroundColor: [
+                                'rgba(255, 99, 132, 0.2)',
+                                'rgba(54, 162, 235, 0.2)'
+                            ],
+                            borderColor: [
+                                'rgba(255, 99, 132, 1)',
+                                'rgba(54, 162, 235, 1)'
+                            ],
+                            borderWidth: 1
+                        }]
+                    },
+                    options: {
+                        responsive: true,
+                        plugins: {
+                            legend: {
+                                display: true
+                            }
+                        }
+                    }
+                });
+            </script>
+        {% endif %}
+    {% endfor %}
+</body>
+</html>
